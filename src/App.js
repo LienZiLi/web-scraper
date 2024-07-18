@@ -1,5 +1,9 @@
-import logo from './logo.svg';
-import './App.css';
+import logo from "./logo.svg";
+import "./App.css";
+
+function clickHandler() {
+  window.electron.send("click", "test data");
+}
 
 function App() {
   return (
@@ -9,6 +13,7 @@ function App() {
         <p>
           Edit <code>src/App.js</code> and save to reload.
         </p>
+        <button onClick={clickHandler}>Test</button>
         <a
           className="App-link"
           href="https://reactjs.org"

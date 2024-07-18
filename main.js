@@ -1,4 +1,4 @@
-const { app, BrowserWindow } = require("electron");
+const { app, BrowserWindow, ipcMain } = require("electron");
 const path = require("path");
 
 async function createWindow() {
@@ -9,6 +9,8 @@ async function createWindow() {
     height: 600,
     webPreferences: {
       preload: path.join(__dirname, "preload.js"),
+      nodeIntegration: true, // This is required for `require` to work in renderer process
+      contextIsolation: true, // This is required to use `ipcRenderer` directly
     },
   });
 
@@ -19,6 +21,10 @@ async function createWindow() {
     mainWindow.loadFile("./build/index.html");
   }
 }
+
+ipcMain.on("click", (event, arg) => {
+  console.log(arg);
+});
 
 app.whenReady().then(() => {
   createWindow();
