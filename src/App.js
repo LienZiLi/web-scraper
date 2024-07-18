@@ -2,7 +2,7 @@ import logo from "./logo.svg";
 import "./App.css";
 
 function clickHandler() {
-  window.electron.send("click", "test data");
+  window.electron.send("click", "https://www.chess.com");
 }
 
 function App() {

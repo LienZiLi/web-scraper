@@ -1,5 +1,6 @@
 const { app, BrowserWindow, ipcMain } = require("electron");
 const path = require("path");
+const Nightmare = require("nightmare");
 
 async function createWindow() {
   const { default: isDev } = await import("electron-is-dev");
@@ -22,12 +23,26 @@ async function createWindow() {
   }
 }
 
-ipcMain.on("click", (event, arg) => {
-  console.log(arg);
-});
-
 app.whenReady().then(() => {
   createWindow();
+  const nightmare = Nightmare({
+    show: true,
+    electronPath: require("./node_modules/electron"),
+  });
+
+  ipcMain.on("click", (event, arg) => {
+    console.log("Received URL:", arg); // Log the received URL
+    nightmare
+      .goto("https://www.chess.com")
+      .wait("body")
+      .evaluate(() => document.title)
+      .end()
+      .then(console.log)
+      .catch((error) => {
+        console.error("Error:", error);
+      });
+  });
+
   app.on("activate", function () {
     if (BrowserWindow.getAllWindows().length === 0) createWindow();
   });
